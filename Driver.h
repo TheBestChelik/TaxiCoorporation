@@ -22,10 +22,10 @@ public:
     int SetOrder(unsigned int OrderID);
     void CompeteOrder();
 
-    WorkStatus GetWorkStatus();
+    WorkStatus GetWorkStatus() const;
     void UpdateWorkStatus(WorkStatus ws);
-    unsigned int GetCurrentCarID();
-    int GetDrivingExperience();
+    unsigned int GetCurrentCarID() const;
+    int GetDrivingExperience() const;
 
     friend ostream &operator<<(ostream &os,
                                const WorkStatus &ws);

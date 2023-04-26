@@ -15,7 +15,7 @@ public:
 
     int OrderTaxi(string startAdress, string FinalAdress,
                   float distance, CarClass carClass);
-    bool CheckBalance(int sum);
+    bool CheckBalance(int sum) const;
     int CancelOrder();
 
     void UpdateDiscount(float discount);
