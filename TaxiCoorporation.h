@@ -65,6 +65,7 @@ public:
 
     string GetCorporationName() const;
     Orders GetOrders() const;
+    list<Car> GetCars() const;
     list<Driver> GetDrivers() const;
     list<Customer> GetCustomers() const;
 
