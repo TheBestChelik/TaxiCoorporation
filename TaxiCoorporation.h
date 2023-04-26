@@ -18,6 +18,7 @@ private:
     TaxiDepot taxiDepot;
     Orders ordes;
     PriceList priceList;
+    string CorporationName;
 
     int FindOrderForDriver(int DriverID);
     int FindDriverForOrder(int OrderID);
@@ -61,6 +62,7 @@ public:
     int RemoveCustomer(unsigned int CustomerID);
     int RemoveCar(unsigned int CarID);
 
+    string GetCorporationName() const;
     PriceList GetPriceList() const;
     Orders GetOrders() const;
     TaxiDepot GetTaxiDepot() const;
