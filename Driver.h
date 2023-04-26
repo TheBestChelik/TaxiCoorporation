@@ -9,7 +9,11 @@ private:
     WorkStatus workStatus;
 
 public:
-    Driver(TaxiCoorporation *taxi, int ID,
+    Driver(string FirstName = "Driver",
+           string LastName = "",
+           string PhoneNumber = "", int Balance = 0,
+           int DrivingExperience = 0);
+    Driver(TaxiCorporation *tc, unsigned int id,
            string FirstName = "Driver",
            string LastName = "",
            string PhoneNumber = "", int Balance = 0,

@@ -7,25 +7,26 @@
 #include "Car.h"
 #include "structures.h"
 #include <string>
+#include <map>
 #include <ctime>
 #include <iostream>
 using namespace std;
-class TaxiCoorporation
+class TaxiCorporation
 {
 private:
     list<Customer> Customers;
     list<Driver> Drivers;
-    TaxiDepot taxiDepot;
+    list<Car> Cars;
     Orders ordes;
-    PriceList priceList;
+    map<CarClass, int> GetPrice;
     string CorporationName;
 
     int FindOrderForDriver(int DriverID);
     int FindDriverForOrder(int OrderID);
 
 public:
-    TaxiCoorporation(PriceList pl, string CorporationName = "");
-    ~TaxiCoorporation();
+    TaxiCorporation(string CorporationName = "");
+    ~TaxiCorporation();
 
     int finishOrder(unsigned int orderID);
     int IssueCar(unsigned int CarID,
@@ -63,18 +64,12 @@ public:
     int RemoveCar(unsigned int CarID);
 
     string GetCorporationName() const;
-    PriceList GetPriceList() const;
     Orders GetOrders() const;
-    TaxiDepot GetTaxiDepot() const;
     list<Driver> GetDrivers() const;
     list<Customer> GetCustomers() const;
 
     friend ostream &operator<<(ostream &os,
-                               const TaxiCoorporation &tc);
-    friend ostream &operator<<(ostream &os,
-                               const PriceList &pl);
+                               const TaxiCorporation &tc);
     friend ostream &operator<<(ostream &os,
                                const Orders &ordrs);
-    friend ostream &operator<<(ostream &os,
-                               const TaxiDepot &td);
 };

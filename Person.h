@@ -7,13 +7,13 @@ protected:
     string FirstName;
     string LastName;
     string PhoneNumber;
-    TaxiCoorporation *taxiCoorporation;
+    TaxiCorporation *taxiCoorporation;
     unsigned int ActiveOrderID;
     int Balance;
     unsigned int ID;
 
 public:
-    Person(TaxiCoorporation *taxi, string FirstName = "",
+    Person(string FirstName = "",
            string LastName = "", string PhoneNumber = "",
            int Balance = 0);
     ~Person();

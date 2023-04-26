@@ -16,6 +16,10 @@ public:
         string Color = "",
         unsigned int SerialNumber = 0,
         CarClass carClass = Econom);
+    Car(string CarNumber = "",
+        string Color = "",
+        unsigned int SerialNumber = 0,
+        CarClass carClass = Econom);
     ~Car();
 
     void DriveOrder(Order *order);

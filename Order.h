@@ -4,7 +4,7 @@ using namespace std;
 class Order
 {
 private:
-    TaxiCoorporation *TaxiCoorporation;
+    TaxiCorporation *TaxiCorporation;
     int CustomerID;
     int DriverID;
     unsigned int ID;
@@ -18,7 +18,7 @@ private:
     int PayDriver();
 
 public:
-    Order(Route r);
+    Order();
     ~Order();
 
     int FinishOrder();

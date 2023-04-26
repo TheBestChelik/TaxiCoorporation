@@ -3,9 +3,34 @@
 int main()
 {
     {
+        cout << "Test 0 simple unit tests" << endl;
+        Driver driver = Driver("John", "Doe", "123-456-7890", 5);
+        if (driver.GetFirstName() != "John")
+            return 1;
+        if (driver.GetLastName() != "Doe")
+            return 1;
+        if (driver.GetPhoneNumber() != "123-456-7890")
+            return 1;
+        if (driver.GetDrivingExperience() != 5)
+            return 1;
+        Customer customer = Customer("John", "Doe", "123-456-7890", 0.8);
+        if (customer.GetDiscount() != 0.8)
+            return 1;
+        Car car = Car("ABC123", "Red", 12345, Econom);
+        if (car.GetCarNumber() != "ABC123")
+            return 1;
+        if (car.GetSerialNumber() != 12345)
+            return 1;
+        if (car.GetColor() != "Red")
+            return 1;
+        if (car.GetCarClass() != Econom)
+            return 1;
+    }
+
+    cout << "Unit tests passed" << endl;
+    {
         cout << "Test 1 testing adding and removing items to Taxi Corporation" << endl;
-        PriceList pl = NewPriceList();
-        TaxiCoorporation taxiCorp(pl);
+        TaxiCorporation taxiCorp = TaxiCorporation();
         cout << "Addig items to taxi corp" << endl;
         unsigned int driver1ID = taxiCorp.AddNewDriver("John", "Doe", "123-456-7890", 5);
         unsigned int driver2ID = taxiCorp.AddNewDriver("Jane", "Doe", "098-765-4321", 2);
@@ -32,8 +57,7 @@ int main()
     }
     {
         cout << "Test 2 testing find by id methods" << endl;
-        PriceList pl = NewPriceList();
-        TaxiCoorporation taxiCorp(pl);
+        TaxiCorporation taxiCorp = TaxiCorporation();
         taxiCorp.AddNewDriver("John", "Doe", "123-456-7890", 5);
         taxiCorp.AddNewDriver("Jane", "Doe", "098-765-4321", 2);
         taxiCorp.AddNewCustomer("Alice", "Smith", "555-123-4567", 0.2);
@@ -57,8 +81,7 @@ int main()
     }
     {
         cout << "Test 3 testing the main alghorithm" << endl;
-        PriceList pl = NewPriceList();
-        TaxiCoorporation taxiCorp(pl);
+        TaxiCorporation taxiCorp = TaxiCorporation();
         unsigned int Driver = taxiCorp.AddNewDriver(
             "John", "Doe", "123-456-7890", 5);
         unsigned int Driver2 = taxiCorp.AddNewDriver(
