@@ -1,10 +1,10 @@
-#pragma once
-#include <TaxiCoorporation.h>
+class TaxiCorporation;
+
 using namespace std;
 class Order
 {
 private:
-    TaxiCorporation *TaxiCorporation;
+    TaxiCorporation *taxiCorporation;
     int CustomerID;
     int DriverID;
     unsigned int ID;
@@ -12,13 +12,14 @@ private:
     Route route;
     float Price;
     time_t OrderDataTime;
+    CarClass carClass;
     bool OrderDone;
 
     int GetPayment();
     int PayDriver();
 
 public:
-    Order();
+    Order(TaxiCorporation *tc, unsigned int ID, string StartingAdress, string FinalAdress, float Distance, CarClass CarClass);
     ~Order();
 
     int FinishOrder();

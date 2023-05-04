@@ -1,15 +1,18 @@
 #pragma once
 #include <list>
+#include <string>
+#include <map>
+#include <ctime>
+#include <iostream>
 #include "Person.h"
 #include "Customer.h"
 #include "Driver.h"
 #include "Order.h"
 #include "Car.h"
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
 #include "structures.h"
-#include <string>
-#include <map>
-#include <ctime>
-#include <iostream>
+#endif /* STRUCTURES_H */
 using namespace std;
 class TaxiCorporation
 {
@@ -17,7 +20,8 @@ private:
     list<Customer> Customers;
     list<Driver> Drivers;
     list<Car> Cars;
-    Orders ordes;
+    list<Order> Orders;
+    // Orders ordes;
     map<CarClass, int> GetPrice;
     string CorporationName;
 
@@ -54,17 +58,18 @@ public:
                            unsigned int serialNuber,
                            CarClass CarClass);
 
-    Order &GetOrderByID(unsigned int OrderID) const;
-    Customer &GetCustomerByID(unsigned int CustomerID) const;
-    Driver &GetDriverByID(unsigned int DriverID) const;
-    Car &GetCarByID(unsigned int CarID) const;
+    const Order &GetOrderByID(unsigned int OrderID) const;
+    const Customer &GetCustomerByID(unsigned int CustomerID) const;
+    const Driver &GetDriverByID(unsigned int DriverID) const;
+    const Car &GetCarByID(unsigned int CarID) const;
 
     int RemoveDriver(unsigned int DriverID);
     int RemoveCustomer(unsigned int CustomerID);
     int RemoveCar(unsigned int CarID);
 
     string GetCorporationName() const;
-    Orders GetOrders() const;
+    list<Order> GetOrders() const;
+    // Orders GetOrders() const;
     list<Car> GetCars() const;
     list<Driver> GetDrivers() const;
     list<Customer> GetCustomers() const;
@@ -72,5 +77,5 @@ public:
     friend ostream &operator<<(ostream &os,
                                const TaxiCorporation &tc);
     friend ostream &operator<<(ostream &os,
-                               const Orders &ordrs);
+                               const list<Order> &ordrs);
 };

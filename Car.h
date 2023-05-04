@@ -1,5 +1,8 @@
-#pragma once
-#include <TaxiCoorporation.h>
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
+#include "structures.h"
+#endif /* STRUCTURES_H */
+class TaxiCorporation;
 using namespace std;
 class Car
 {
@@ -15,15 +18,16 @@ public:
     Car(unsigned int ID, string CarNumber = "",
         string Color = "",
         unsigned int SerialNumber = 0,
-        CarClass carClass = Econom);
+        CarClass carClass = CarClass::Standart);
     Car(string CarNumber = "",
         string Color = "",
         unsigned int SerialNumber = 0,
-        CarClass carClass = Econom);
+        CarClass carClass = CarClass::Standart);
     ~Car();
 
     void DriveOrder(Order *order);
     void UpdateOccupiedState(bool occupied);
+    bool GetOccupiedState() const;
 
     CarClass GetCarClass() const;
     string GetCarNumber() const;

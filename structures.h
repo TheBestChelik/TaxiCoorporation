@@ -1,12 +1,4 @@
-#pragma once
-#include <TaxiCoorporation.h>
 using namespace std;
-struct Orders
-{
-    list<Order> Queue;
-    list<Order> InProgress;
-    list<Order> Completed;
-};
 enum WorkStatus
 {
     OnBreak = 0,
@@ -25,6 +17,3 @@ struct Route
     string FinishAdress;
     float Distance;
 };
-Route NewRoute(string StartAdress = "",
-               string FinishAdress = "",
-               float Distance = 0);

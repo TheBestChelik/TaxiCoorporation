@@ -1,5 +1,8 @@
-#pragma once
-#include <TaxiCoorporation.h>
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
+#include "structures.h"
+#endif /* STRUCTURES_H */
+class TaxiCorporation;
 using namespace std;
 class Customer : public Person
 {
@@ -7,11 +10,11 @@ private:
     float Discount;
 
 public:
-    Customer(string FirstName = "Customer", string LastName = "",
+    Customer(string FirstName = "", string LastName = "",
              string PhoneNumber = "", int Balance = 0,
              float Discount = 0);
     Customer(int ID, TaxiCorporation *tc,
-             string FirstName = "Customer", string LastName = "",
+             string FirstName = "", string LastName = "",
              string PhoneNumber = "", int Balance = 0,
              float Discount = 0);
     ~Customer();

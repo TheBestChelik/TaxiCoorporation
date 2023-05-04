@@ -1,5 +1,4 @@
-#pragma once
-#include <TaxiCoorporation.h>
+class TaxiCorporation;
 using namespace std;
 class Person
 {
