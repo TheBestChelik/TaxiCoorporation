@@ -1,9 +1,10 @@
 #pragma once
 #include "TaxiCorporation.h"
 // Default constructor
-Order::Order(TaxiCorporation *tc, unsigned int Id,
+Order::Order(TaxiCorporation *tc, unsigned int Id, unsigned int CustomerID,
              string StartingAdress, string FinalAdress, float Distance,
-             CarClass CarClass) : taxiCorporation(tc), ID(Id), carClass(CarClass)
+             CarClass CarClass, float Price) : taxiCorporation(tc), ID(Id), carClass(CarClass),
+                                               CustomerID(CustomerID), Price(Price)
 {
     this->route.StartAdress = StartingAdress;
     this->route.FinishAdress = FinalAdress;
@@ -17,6 +18,15 @@ Order::~Order()
 // Finish the order and update the customer and driver balances and order status
 int Order::FinishOrder()
 {
+    this->OrderDone = true;
+    Driver &Driver = taxiCorporation->GetDriverByID(DriverID);
+    Customer &Customer = taxiCorporation->GetCustomerByID(CustomerID);
+    Customer.ReduceBalance(Customer.UseDiscount(GetPriceForCustomer()));
+    Customer.UpdateDiscount(0.05);
+    Driver.TopUpBalance(GetPriceForDriver());
+    Driver.SetOrder(0);
+    Driver.UpdateWorkStatus(WaitingForOrder);
+    Customer.SetOrder(0);
 }
 
 // Get the order done state
@@ -54,7 +64,18 @@ unsigned int Order::GetCarID() const
 {
     return CarID;
 }
-
+CarClass Order::GetCarClass() const
+{
+    return this->carClass;
+}
+void Order::SetDriverID(unsigned int DriverID)
+{
+    this->DriverID = DriverID;
+}
+void Order::SetCarID(unsigned int CarID)
+{
+    this->CarID = CarID;
+}
 // Get the price for the customer
 float Order::GetPriceForCustomer() const
 {
@@ -64,7 +85,7 @@ float Order::GetPriceForCustomer() const
 // Get the price for the driver
 float Order::GetPriceForDriver() const
 {
-    return Price;
+    return Price * 0.75f;
 }
 
 // Get the order time

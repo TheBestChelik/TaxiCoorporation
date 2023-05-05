@@ -43,9 +43,18 @@ unsigned int Car::GetID() const
 {
     return ID;
 }
+void Car::UpdateOccupiedState(bool occupied)
+{
+    this->Occupied = occupied;
+}
 bool Car::GetOccupiedState() const
 {
     return Occupied;
+}
+void Car::DriveOrder()
+{
+    // Car is driving
+    // cout << "Car is driving" << endl;
 }
 // Output stream operator for CarClass enum
 ostream &operator<<(ostream &os, const CarClass &cc)

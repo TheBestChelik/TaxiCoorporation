@@ -32,16 +32,16 @@ public:
     TaxiCorporation(string CorporationName = "");
     ~TaxiCorporation();
 
-    int finishOrder(unsigned int orderID);
+    int FinishOrder(unsigned int orderID);
     int IssueCar(unsigned int CarID,
                  unsigned int DriverID);
     int ReturnCar(unsigned int CarID);
-    unsigned int PostOrder(string StartAdress,
+    unsigned int PostOrder(unsigned int CustomerID,
+                           string StartAdress,
                            string FinalAdress,
                            float distance,
                            CarClass CarClass);
     int RemoveOrder(unsigned int OrderID);
-    int FinidhOrder(unsigned int OrderID);
     int CalculatePrice(CarClass CarClass,
                        float Distance);
 
@@ -58,10 +58,14 @@ public:
                            unsigned int serialNuber,
                            CarClass CarClass);
 
-    const Order &GetOrderByID(unsigned int OrderID) const;
-    const Customer &GetCustomerByID(unsigned int CustomerID) const;
-    const Driver &GetDriverByID(unsigned int DriverID) const;
-    const Car &GetCarByID(unsigned int CarID) const;
+    bool CarInList(unsigned int ID) const;
+    bool DriverInList(unsigned int ID) const;
+    bool CustomerInList(unsigned int ID) const;
+    bool OrderInList(unsigned int ID) const;
+    Order &GetOrderByID(unsigned int OrderID) const;
+    Customer &GetCustomerByID(unsigned int CustomerID) const;
+    Driver &GetDriverByID(unsigned int DriverID) const;
+    Car &GetCarByID(unsigned int CarID) const;
 
     int RemoveDriver(unsigned int DriverID);
     int RemoveCustomer(unsigned int CustomerID);

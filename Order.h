@@ -19,13 +19,16 @@ private:
     int PayDriver();
 
 public:
-    Order(TaxiCorporation *tc, unsigned int ID, string StartingAdress, string FinalAdress, float Distance, CarClass CarClass);
+    Order(TaxiCorporation *tc, unsigned int ID, unsigned int CustomerID, string StartingAdress, string FinalAdress, float Distance, CarClass CarClass, float Price);
     ~Order();
 
     int FinishOrder();
 
     bool GetOrderDoneState() const;
     Route GetRoute() const;
+    CarClass GetCarClass() const;
+    void SetDriverID(unsigned int DriverID);
+    void SetCarID(unsigned int CarID);
     unsigned int GetCusomerID() const;
     unsigned int GetDriverID() const;
     unsigned int GetID() const;

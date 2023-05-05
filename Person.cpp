@@ -11,7 +11,11 @@ Person::Person(string FirstName, string LastName, string PhoneNumber, int Balanc
 Person::~Person()
 {
 }
-
+// Sets the order
+void Person::SetOrder(unsigned int OrderID)
+{
+    this->ActiveOrderID = OrderID;
+}
 // Get the first name
 string Person::GetFirstName() const
 {

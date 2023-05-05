@@ -1,4 +1,5 @@
 #include "TaxiCorporation.h"
+#include <cstring>
 #include <cassert>
 
 template <typename ExceptionType, typename FunctionType, typename... Args>
@@ -35,13 +36,12 @@ void testCar()
     assert(car2.GetCarClass() == CarClass::Standart);
     assert(!car2.GetOccupiedState());
 
-    // // Test DriveOrder and UpdateOccupiedState methods
-    // Order order(nullptr, 1, "123 Main St", "456 Elm St", 10.5, CarClass::Standart);
-    // // car2.DriveOrder(&order);
-    // assert(car2.GetOccupiedState());
-    // assert(order.GetCarID() == car2.GetID());
-    // car2.UpdateOccupiedState(false);
-    // assert(!car2.GetOccupiedState());
+    // UpdateOccupiedState methods
+    Order order(nullptr, 1, 132, "123 Main St", "456 Elm St", 10.5, CarClass::Standart, 125);
+    car2.UpdateOccupiedState(true);
+    assert(car2.GetOccupiedState());
+    car2.UpdateOccupiedState(false);
+    assert(!car2.GetOccupiedState());
 }
 void testCustomer()
 {
@@ -62,17 +62,6 @@ void testCustomer()
     assert(customer2.GetPhoneNumber() == "123-456-7890");
     assert(customer2.GetBalance() == 100);
     assert(customer2.GetDiscount() == 0.1f);
-
-    // // Test OrderTaxi, CheckBalance, CancelOrder, and UseDiscount methods
-    // TaxiCorporation taxi("My Taxi Corporation");
-    // unsigned int orderID = customer2.OrderTaxi("123 Main St", "456 Elm St", 10.5, CarClass::Standart);
-    // assert(orderID > 0);
-    // assert(customer2.CheckBalance(50));
-    // assert(!customer2.CheckBalance(200));
-    // assert(customer2.CancelOrder());
-    // assert_throws<std::out_of_range>([&]
-    //                                  { taxi.GetOrderByID(orderID); });
-    // assert(customer2.UseDiscount(50) == 45);
 }
 void testTaxiCorporation()
 {
@@ -83,11 +72,6 @@ void testTaxiCorporation()
     assert(taxi.GetCarByID(carID).GetID() == carID);
     taxi.RemoveCar(carID);
     assert(taxi.GetCars().size() == 0);
-
-    // // Test posting an order and finding it by ID
-    // unsigned int orderID = taxi.PostOrder("123 Main St", "456 Elm St", 10.5, CarClass::Econom);
-    // assert(taxi.GetOrders().size() == 1);
-    // assert(taxi.GetOrderByID(orderID).GetID() == orderID);
 
     // Test adding and removing drivers
     unsigned int driverID = taxi.AddNewDriver("John", "Doe", "555-1234", 2);
@@ -105,155 +89,240 @@ void testTaxiCorporation()
 }
 void testDriver()
 {
-    // Test changing car and setting order
-    // Driver driver("John", "Doe", "555-1234", 0, 1);
-    // unsigned int carID1 = 1, carID2 = 2;
-    // assert(driver.GetCurrentCarID() == 0);
-    // driver.ChangeCar(carID1);
-    // assert(driver.GetCurrentCarID() == carID1);
-    // driver.ChangeCar(carID2);
-    // assert(driver.GetCurrentCarID() == carID2);
-    // Order order(nullptr, 1, "123 Main St", "456 Elm St", 10.5, CarClass::Econom);
-    // assert(driver.SetOrder(order.GetID()) == 0);
-    // assert(driver.SetOrder(order.GetID()) != 0);
-    // assert(driver.GetWorkStatus() == WorkStatus::OnOrder);
-    // driver.CompeteOrder();
-    // assert(driver.GetWorkStatus() == WorkStatus::WaitingForOrder);
+    // Test default constructor
+    Driver driver1;
+    assert(driver1.GetID() == 0);
+    assert(driver1.GetFirstName() == "Driver");
+    assert(driver1.GetLastName() == "");
+    assert(driver1.GetPhoneNumber() == "");
+    assert(driver1.GetBalance() == 0);
+    assert(driver1.GetDrivingExperience() == 0);
+    assert(driver1.GetCurrentCarID() == 0);
+    assert(driver1.GetWorkStatus() == OnBreak);
+    // Test parameterized constructor
+    TaxiCorporation taxiCorp;
+    Driver driver2(&taxiCorp, 1, "John", "Doe", "123-456-7890", 100, 5);
+    assert(driver2.GetID() == 1);
+    assert(driver2.GetFirstName() == "John");
+    assert(driver2.GetLastName() == "Doe");
+    assert(driver2.GetPhoneNumber() == "123-456-7890");
+    assert(driver2.GetBalance() == 100);
+    assert(driver2.GetDrivingExperience() == 5);
+    assert(driver2.GetCurrentCarID() == 0);
+    assert(driver2.GetWorkStatus() == OnBreak);
+}
+void TestOrder()
+{
+    // Create a TaxiCorporation object to pass as a parameter to Order constructor
+    TaxiCorporation taxiCorp;
+    // Test constructor
+    Order order1(&taxiCorp, 1, 2, "123 Main St", "456 Elm St", 5.0, CarClass::Standart, 125);
+    assert(order1.GetID() == 1);
+    assert(order1.GetCusomerID() == 2);
+    assert(order1.GetDriverID() == 0);
+    assert(order1.GetCarID() == 0);
+    assert(order1.GetOrderDoneState() == false);
+    assert(order1.GetRoute().StartAdress == "123 Main St");
+    assert(order1.GetRoute().FinishAdress == "456 Elm St");
+    assert(order1.GetRoute().Distance == 5.0);
+    assert(order1.GetCarClass() == CarClass::Standart);
+
+    // Test setters and getters
+    order1.SetDriverID(3);
+    order1.SetCarID(4);
+    assert(order1.GetDriverID() == 3);
+    assert(order1.GetCarID() == 4);
+}
+void testAddingRemoving()
+{
+    TaxiCorporation taxiCorp = TaxiCorporation();
+    unsigned int driver1ID = taxiCorp.AddNewDriver("John", "Doe", "123-456-7890", 5);
+    unsigned int driver2ID = taxiCorp.AddNewDriver("Jane", "Doe", "098-765-4321", 2);
+    unsigned int customer1ID = taxiCorp.AddNewCustomer("Alice", "Smith", "555-123-4567", 0.2);
+    unsigned int customer2ID = taxiCorp.AddNewCustomer("Bob", "Johnson", "555-987-6543", 0.1);
+    unsigned int car1ID = taxiCorp.AddNewCar("ABC123", "Red", 12345, Econom);
+    unsigned int car2ID = taxiCorp.AddNewCar("DEF456", "Blue", 67890, Business);
+
+    assert(taxiCorp.GetDrivers().size() == 2);
+    assert(taxiCorp.GetCustomers().size() == 2);
+    assert(taxiCorp.GetCars().size() == 2);
+
+    taxiCorp.RemoveDriver(driver1ID);
+    taxiCorp.RemoveCustomer(customer2ID);
+    taxiCorp.RemoveCar(car1ID);
+
+    assert(taxiCorp.GetDrivers().size() == 1);
+    assert(taxiCorp.GetCustomers().size() == 1);
+    assert(taxiCorp.GetCars().size() == 1);
+
+    taxiCorp.RemoveCar(777);
+    taxiCorp.RemoveDriver(777);
+    taxiCorp.RemoveCustomer(777);
+
+    assert(taxiCorp.GetDrivers().size() == 1);
+    assert(taxiCorp.GetCustomers().size() == 1);
+    assert(taxiCorp.GetCars().size() == 1);
+}
+void testFindingByID()
+{
+    TaxiCorporation taxiCorp = TaxiCorporation();
+    taxiCorp.AddNewDriver("John", "Doe", "123-456-7890", 5);
+    taxiCorp.AddNewDriver("Jane", "Doe", "098-765-4321", 2);
+    auto id1 = taxiCorp.AddNewCustomer("Alice", "Smith", "555-123-4567", 0.2);
+    auto id2 = taxiCorp.AddNewCustomer("Bob", "Johnson", "555-987-6543", 0.1);
+    taxiCorp.AddNewCar("ABC123", "Red", 12345, Econom);
+    taxiCorp.AddNewCar("DEF456", "Blue", 67890, Business);
+
+    assert(taxiCorp.GetDriverByID(2).GetFirstName() == "Jane");
+    try
+    {
+        taxiCorp.GetDriverByID(77);
+        assert(false && "Expected std::invalid_argument exception");
+    }
+    catch (const std::invalid_argument &e)
+    {
+        assert(strcmp(e.what(), "No driver with the specified ID.") == 0);
+    }
+    assert(taxiCorp.GetCustomerByID(1).GetFirstName() == "Alice");
+    assert(taxiCorp.GetDriverByID(1).GetFirstName() == "John");
+    try
+    {
+        taxiCorp.GetCustomerByID(77);
+        assert(false && "Expected std::invalid_argument exception");
+    }
+    catch (const std::invalid_argument &e)
+    {
+        assert(strcmp(e.what(), "No customer with the specified ID.") == 0);
+    }
+    assert(taxiCorp.GetCarByID(2).GetCarNumber() == "DEF456");
+    assert(taxiCorp.GetDriverByID(2).GetFirstName() == "Jane");
+    try
+    {
+        taxiCorp.GetCarByID(77);
+        assert(false && "Expected std::invalid_argument exception");
+    }
+    catch (const std::invalid_argument &e)
+    {
+        assert(strcmp(e.what(), "No car with the specified ID.") == 0);
+    }
+    assert(taxiCorp.GetDriverByID(2).GetFirstName() == "Jane");
+    taxiCorp.GetCustomerByID(2).TopUpBalance(100);
+
+    assert(taxiCorp.GetCustomerByID(2).GetBalance() == 100);
 }
 
+void testMainAlgorithm()
+{
+    TaxiCorporation taxiCorp = TaxiCorporation();
+    unsigned int Driver = taxiCorp.AddNewDriver(
+        "John", "Doe", "123-456-7890", 5);
+    unsigned int Driver2 = taxiCorp.AddNewDriver(
+        "Jane", "Doe", "098-765-4321", 2);
+    unsigned int Customer = taxiCorp.AddNewCustomer(
+        "Alice", "Smith", "555-123-4567", 0.2);
+    unsigned int Car = taxiCorp.AddNewCar(
+        "DEF456", "Blue", 67890, Standart);
+    unsigned int Car2 = taxiCorp.AddNewCar(
+        "ABC123", "Red", 12345, Econom);
+
+    assert(taxiCorp.GetDrivers().size() == 2);
+    assert(taxiCorp.GetCustomers().size() == 1);
+    assert(taxiCorp.GetCars().size() == 2);
+    assert(taxiCorp.GetOrders().size() == 0);
+
+    // Driver waits for order
+
+    assert(taxiCorp.GetDriverByID(Driver).StartWork(Car) == 0);
+
+    taxiCorp.GetCustomerByID(Customer).TopUpBalance(400);
+    taxiCorp.GetCustomerByID(Customer).UpdateDiscount(0.15); // 15% discount
+    assert(taxiCorp.GetCustomerByID(Customer).OrderTaxi(
+               "789 Oak St", "101 Maple St", 10.0, Standart) == 0);
+
+    assert(taxiCorp.GetOrders().size() == 1);
+
+    unsigned int Order =
+        taxiCorp.GetCustomerByID(Customer).GetActiveOrderID(); // should return the order id
+    assert(Order == 1);
+    assert(taxiCorp.GetOrderByID(Order).GetRoute().StartAdress == "789 Oak St");
+
+    taxiCorp.GetDriverByID(Driver).CompeteOrder();
+
+    assert(taxiCorp.GetOrderByID(Order).GetOrderDoneState() == true);
+    assert(taxiCorp.GetDriverByID(Driver).GetWorkStatus() == WorkStatus::WaitingForOrder);
+    assert(taxiCorp.GetDriverByID(Driver).GetBalance() == 112);
+    assert(taxiCorp.GetCustomerByID(Customer).GetBalance() == 273);
+    assert(taxiCorp.GetCustomerByID(Customer).GetActiveOrderID() == 0);
+    // Customer waits for driver
+    assert(taxiCorp.GetCustomerByID(Customer).OrderTaxi(
+               "7894 Pon St", "818 Nop St", 3.0, Econom) == 0);
+
+    assert(taxiCorp.GetOrders().size() == 2);
+
+    taxiCorp.GetDriverByID(Driver2).StartWork(Car2);
+
+    assert(taxiCorp.GetOrderByID(2).GetDriverID() == Driver2);
+
+    taxiCorp.GetDriverByID(Driver2).CompeteOrder();
+
+    assert(taxiCorp.GetOrderByID(2).GetOrderDoneState() == true);
+
+    assert(taxiCorp.GetDriverByID(Driver).StopWork() == 0);
+
+    assert(taxiCorp.GetCustomerByID(Customer).OrderTaxi(
+               "789 Oak St", "101 Maple St", 10.0, Standart) == 0);
+
+    assert(taxiCorp.GetOrders().size() == 3);
+
+    assert(taxiCorp.GetCustomerByID(Customer).CancelOrder() == 0);
+
+    assert(taxiCorp.GetOrders().size() == 2);
+
+    assert(taxiCorp.GetCustomerByID(Customer).OrderTaxi(
+               "789 Oak St", "101 Maple St", 10.0, Standart) == 0);
+    assert(taxiCorp.GetDriverByID(Driver).StartWork(Car) == 0);
+
+    assert(taxiCorp.GetDriverByID(Driver).GetActiveOrderID() == taxiCorp.GetCustomerByID(Customer).GetActiveOrderID());
+
+    assert(taxiCorp.GetCustomerByID(Customer).CancelOrder() == -1);
+
+    assert(taxiCorp.GetDriverByID(Driver).StopWork() == -1);
+    taxiCorp.GetDriverByID(Driver).CompeteOrder();
+    assert(taxiCorp.GetCustomerByID(Customer).OrderTaxi(
+               "789 Oak St", "101 Maple St", 3.0, Standart) == 0);
+    assert(taxiCorp.GetCustomerByID(Customer).OrderTaxi(
+               "789 Oak St", "101 Maple St", 5.0, Econom) == -2); // 2 orders in same time
+    taxiCorp.GetDriverByID(Driver).StartWork(Car);
+    taxiCorp.GetDriverByID(Driver).CompeteOrder();
+    assert(taxiCorp.GetCustomerByID(Customer).OrderTaxi(
+               "7894 Pon St", "818 Nop St", 100.0, Business) == -1); // not enough money
+}
 int main()
 {
     cout << "Welcome to taxi Corporation!" << endl;
+    cout << "Car test: " << endl;
     testCar();
     cout << "Car test passed" << endl;
+    cout << "Customer test:" << endl;
     testCustomer();
     cout << "Customer test passed" << endl;
+    cout << "Driver test:" << endl;
     testDriver();
     cout << "Driver test passed" << endl;
+    cout << "Taxi Copr test:" << endl;
     testTaxiCorporation();
     cout << "Taxi Copr test passed" << endl;
-
-    // cout << "Unit tests passed" << endl;
-    // {
-    //     cout << "Test 1 testing adding and removing items to Taxi Corporation" << endl;
-    //     TaxiCorporation taxiCorp = TaxiCorporation();
-    //     cout << "Addig items to taxi corp" << endl;
-    //     unsigned int driver1ID = taxiCorp.AddNewDriver("John", "Doe", "123-456-7890", 5);
-    //     unsigned int driver2ID = taxiCorp.AddNewDriver("Jane", "Doe", "098-765-4321", 2);
-    //     unsigned int customer1ID = taxiCorp.AddNewCustomer("Alice", "Smith", "555-123-4567", 0.2);
-    //     unsigned int customer2ID = taxiCorp.AddNewCustomer("Bob", "Johnson", "555-987-6543", 0.1);
-    //     unsigned int car1ID = taxiCorp.AddNewCar("ABC123", "Red", 12345, Econom);
-    //     unsigned int car2ID = taxiCorp.AddNewCar("DEF456", "Blue", 67890, Business);
-    //     unsigned int order1ID = taxiCorp.PostOrder("123 Main St", "456 Elm St", 5.0, Econom);
-    //     unsigned int order2ID = taxiCorp.PostOrder("789 Oak St", "101 Maple St", 10.0, Business);
-    //     int result1 = taxiCorp.IssueCar(car1ID, driver1ID);
-    //     cout << taxiCorp << endl;
-
-    //     cout << "Removing items from taxi coorp" << endl;
-    //     taxiCorp.RemoveDriver(driver1ID);
-    //     taxiCorp.RemoveCustomer(customer2ID);
-    //     taxiCorp.RemoveCar(car1ID);
-    //     cout << taxiCorp << endl;
-
-    //     cout << "Removing items that are not in the lists" << endl;
-    //     taxiCorp.RemoveCar(777);
-    //     taxiCorp.RemoveDriver(777);
-    //     taxiCorp.RemoveCustomer(777);
-    //     cout << taxiCorp << endl;
-    // }
-    // {
-    //     cout << "Test 2 testing find by id methods" << endl;
-    //     TaxiCorporation taxiCorp = TaxiCorporation();
-    //     taxiCorp.AddNewDriver("John", "Doe", "123-456-7890", 5);
-    //     taxiCorp.AddNewDriver("Jane", "Doe", "098-765-4321", 2);
-    //     taxiCorp.AddNewCustomer("Alice", "Smith", "555-123-4567", 0.2);
-    //     taxiCorp.AddNewCustomer("Bob", "Johnson", "555-987-6543", 0.1);
-    //     taxiCorp.AddNewCar("ABC123", "Red", 12345, Econom);
-    //     taxiCorp.AddNewCar("DEF456", "Blue", 67890, Business);
-    //     taxiCorp.PostOrder("123 Main St", "456 Elm St", 5.0, Econom);
-    //     taxiCorp.PostOrder("789 Oak St", "101 Maple St", 10.0, Business);
-    //     cout << "Driver with id 2:" << taxiCorp.GetDriverByID(2) << endl;
-    //     cout << "Driver with id 77(not in list):" << taxiCorp.GetDriverByID(77) << endl;
-    //     cout << "Customer with id 2:" << taxiCorp.GetCustomerByID(2) << endl;
-    //     cout << "Customer with id 77(not in list):" << taxiCorp.GetCustomerByID(77) << endl;
-    //     cout << "Car with id 2:" << taxiCorp.GetCarByID(2) << endl;
-    //     cout << "Car with id 77(not in list):" << taxiCorp.GetCarByID(77) << endl;
-    //     cout << "Order with id 2" << taxiCorp.GetOrderByID(2) << endl;
-    //     cout << "Order with id 77(not in list)" << taxiCorp.GetOrderByID(77) << endl;
-    //     taxiCorp.GetCustomerByID(2).TopUpBalance(100);
-    //     taxiCorp.GetCustomerByID(77).TopUpBalance(100);
-    //     cout << "Customer with id 2" << taxiCorp.GetCustomerByID(2) << endl;
-    //     cout << "Customer with id 77 not in list" << taxiCorp.GetCustomerByID(77) << endl;
-    // }
-    // {
-    //     cout << "Test 3 testing the main alghorithm" << endl;
-    //     TaxiCorporation taxiCorp = TaxiCorporation();
-    //     unsigned int Driver = taxiCorp.AddNewDriver(
-    //         "John", "Doe", "123-456-7890", 5);
-    //     unsigned int Driver2 = taxiCorp.AddNewDriver(
-    //         "Jane", "Doe", "098-765-4321", 2);
-    //     unsigned int Customer = taxiCorp.AddNewCustomer(
-    //         "Alice", "Smith", "555-123-4567", 0.2);
-    //     unsigned int Car = taxiCorp.AddNewCar(
-    //         "DEF456", "Blue", 67890, Standart);
-    //     unsigned int Car2 = taxiCorp.AddNewCar(
-    //         "ABC123", "Red", 12345, Econom);
-    //     cout << "Driver waits for order" << endl;
-    //     taxiCorp.GetDriverByID(Driver).StartWork(Car);
-    //     taxiCorp.GetCustomerByID(Customer).TopUpBalance(400);
-    //     taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //         "789 Oak St", "101 Maple St", 10.0, Standart);
-    //     unsigned int Order =
-    //         taxiCorp.GetCustomerByID(Customer).GetActiveOrderID();
-    //     cout << taxiCorp << endl;
-    //     cout << taxiCorp.GetOrderByID(Order) << endl;
-    //     taxiCorp.GetDriverByID(Driver).CompeteOrder();
-    //     cout << taxiCorp.GetOrderByID(Order) << endl;
-    //     cout << taxiCorp.GetDriverByID(Driver) << endl;
-    //     cout << taxiCorp.GetCustomerByID(Customer) << endl;
-    //     cout << "Customer waits for driver with appropriate car" << endl;
-    //     taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //         "7894 Pon St", "818 Nop St", 3.0, Econom);
-    //     cout << taxiCorp.GetOrders().Queue << endl;
-    //     taxiCorp.GetDriverByID(Driver2).StartWork(Car2);
-    //     taxiCorp.GetDriverByID(Driver2).CompeteOrder();
-    //     cout << "Customer Cancels the order" << endl;
-    //     taxiCorp.GetDriverByID(Driver).StopWork();
-    //     taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //         "789 Oak St", "101 Maple St", 10.0, Standart);
-    //     cout << taxiCorp << endl;
-    //     taxiCorp.GetCustomerByID(Customer).CancelOrder();
-
-    //     cout << "Customer tries to cancel order when it is in progress" << endl;
-    //     taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //         "789 Oak St", "101 Maple St", 10.0, Standart);
-    //     taxiCorp.GetDriverByID(Driver).StartWork(Car);
-    //     cout << "Error code " << taxiCorp.GetCustomerByID(Customer).CancelOrder() << endl;
-    //     taxiCorp.GetDriverByID(Driver).CompeteOrder();
-    //     taxiCorp.GetDriverByID(Driver).StopWork();
-
-    //     cout << "Customer tries to order taxi multiple times" << endl;
-    //     taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //         "789 Oak St", "101 Maple St", 10.0, Standart);
-    //     cout << "Error code"
-    //          << taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //                 "7894 Pon St", "818 Nop St", 3.0, Econom)
-    //          << endl;
-    //     taxiCorp.GetCustomerByID(Customer).CancelOrder();
-
-    //     cout << "Customer has not enough balance";
-    //     cout << "Error code"
-    //          << taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //                 "7894 Pon St", "818 Nop St", 30.0, Business)
-    //          << endl;
-
-    //     cout << "Driver tries to go for a break while having active order" << endl;
-    //     taxiCorp.GetCustomerByID(Customer).OrderTaxi(
-    //         "789 Oak St", "101 Maple St", 10.0, Standart);
-    //     taxiCorp.GetDriverByID(Driver).StartWork(Car);
-    //     cout << "Error code "
-    //          << taxiCorp.GetDriverByID(Driver).StopWork()
-    //          << endl;
-    // }
-    // cout << "All tests passed" << endl;
+    cout << "Order Test:" << endl;
+    TestOrder();
+    cout << "Order test passed" << endl;
+    cout << "Adding and removing items test:" << endl;
+    testAddingRemoving();
+    cout << "Adding and removing items test passed" << endl;
+    cout << "Finding items by id test:" << endl;
+    testFindingByID();
+    cout << "Finding items by id test passed" << endl;
+    cout << "Main algorithm test:" << endl;
+    testMainAlgorithm();
+    cout << "Main algorithm test passed" << endl;
+    cout << "End of tests" << endl;
 }

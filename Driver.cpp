@@ -25,38 +25,33 @@ Driver::~Driver()
 // Start working
 int Driver::StartWork(unsigned int CarID)
 {
+    if (taxiCoorporation == nullptr)
+        return -1;
+    return taxiCoorporation->IssueCar(CarID, this->ID);
 }
 
 // Stop working
 int Driver::StopWork()
 {
+    if (ActiveOrderID != 0)
+        return -1;
+    taxiCoorporation->ReturnCar(CurrentCarId);
+    CurrentCarId = 0;
+    workStatus = OnBreak;
+    return 0;
 }
 
 // Change car
 int Driver::ChangeCar(unsigned int CarID)
 {
+    taxiCoorporation->ReturnCar(CurrentCarId);
+    CurrentCarId = CarID;
 }
-
-// Set order
-int Driver::SetOrder(unsigned int OrderID)
-{
-    if (!taxiCoorporation)
-    {
-        return -1; // No taxi corporation to assign order to
-    }
-
-    if (workStatus != WaitingForOrder)
-    {
-        return -2; // Driver is not currently working and cannot accept orders
-    }
-
-    this->ActiveOrderID = OrderID;
-}
-
 // Complete order
 void Driver::CompeteOrder()
 {
-    ActiveOrderID = 0;
+    taxiCoorporation->GetCarByID(CurrentCarId).DriveOrder();
+    taxiCoorporation->FinishOrder(ActiveOrderID);
 }
 
 // Get the work status

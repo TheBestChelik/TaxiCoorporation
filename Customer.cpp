@@ -23,6 +23,14 @@ Customer::~Customer()
 // Order a taxi
 int Customer::OrderTaxi(string startAdress, string FinalAdress, float distance, CarClass carClass)
 {
+    if (ActiveOrderID != 0)
+    {
+        return -2;
+    }
+    this->ActiveOrderID = taxiCoorporation->PostOrder(this->ID, startAdress, FinalAdress, distance, carClass);
+    if (ActiveOrderID == 0)
+        return -1;
+    return 0;
 }
 
 // Check if balance is enough for an order
@@ -34,6 +42,14 @@ bool Customer::CheckBalance(int sum) const
 // Cancel an order
 int Customer::CancelOrder()
 {
+    Order &order = taxiCoorporation->GetOrderByID(ActiveOrderID);
+    if (order.GetDriverID() != 0)
+    {
+        return -1;
+    }
+    taxiCoorporation->RemoveOrder(ActiveOrderID);
+    ActiveOrderID = 0;
+    return 0;
 }
 
 // Update the discount
@@ -51,9 +67,7 @@ float Customer::GetDiscount() const
 // Use the discount
 int Customer::UseDiscount(float price)
 {
-    int discountPrice = price * Discount;
-    Balance -= discountPrice;
-    return discountPrice;
+    return price * (1 - Discount);
 }
 
 // Output stream operator for Customer

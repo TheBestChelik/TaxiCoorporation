@@ -25,7 +25,7 @@ public:
         CarClass carClass = CarClass::Standart);
     ~Car();
 
-    void DriveOrder(Order *order);
+    void DriveOrder();
     void UpdateOccupiedState(bool occupied);
     bool GetOccupiedState() const;
 

@@ -22,7 +22,6 @@ public:
        int StartWork(unsigned int CarID);
        int StopWork();
        int ChangeCar(unsigned int CarID);
-       int SetOrder(unsigned int OrderID);
        void CompeteOrder();
 
        WorkStatus GetWorkStatus() const;

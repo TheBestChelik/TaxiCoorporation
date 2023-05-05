@@ -21,6 +21,7 @@ public:
     string GetLastName() const;
     string GetPhoneNumber() const;
     unsigned int GetActiveOrderID() const;
+    void SetOrder(unsigned int OrderID);
     int GetBalance() const;
     unsigned int GetID() const;
 
