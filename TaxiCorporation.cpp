@@ -63,11 +63,11 @@ int TaxiCorporation::FindOrderForDriver(int DriverID)
     {
         if (!o.GetOrderDoneState())
         {
-            if (o.GetCarClass() == cc)
+            if (o.carClass == cc)
             {
                 Driver.SetOrder(o.GetID());
-                o.SetDriverID(DriverID);
-                o.SetCarID(CarID);
+                o.DriverID = DriverID;
+                o.CarID = CarID;
                 return 0;
             }
         }
@@ -78,17 +78,17 @@ int TaxiCorporation::FindOrderForDriver(int DriverID)
 int TaxiCorporation::FindDriverForOrder(int OrderID)
 {
     Order &order = GetOrderByID(OrderID);
-    CarClass carClass = order.GetCarClass();
+    CarClass carClass = order.carClass;
     for (auto &d : Drivers)
     {
-        if (d.GetWorkStatus() == WaitingForOrder)
+        if (d.workStatus == WaitingForOrder)
         {
             CarClass cc = GetCarByID(d.GetCurrentCarID()).GetCarClass();
             if (cc == carClass)
             {
                 d.SetOrder(OrderID);
-                order.SetDriverID(d.GetID());
-                order.SetCarID(d.GetCurrentCarID());
+                order.DriverID = d.GetID();
+                order.CarID = d.GetCurrentCarID();
                 return 0;
             }
         }
@@ -98,7 +98,7 @@ int TaxiCorporation::FindDriverForOrder(int OrderID)
 
 // Public methods
 
-TaxiCorporation::TaxiCorporation(string CorporationName)
+TaxiCorporation::TaxiCorporation(const string &CorporationName)
 {
     this->CorporationName = CorporationName;
     GetPrice.insert(std::make_pair(CarClass::Econom, 10));
@@ -125,13 +125,13 @@ int TaxiCorporation::IssueCar(unsigned int CarID, unsigned int DriverID)
     Driver &driver = GetDriverByID(DriverID);
     driver.ChangeCar(CarID);
 
-    driver.UpdateWorkStatus(WaitingForOrder);
+    driver.workStatus = WaitingForOrder;
     int res = FindOrderForDriver(DriverID);
     if (res < 0)
         return -5;
     if (res == 0)
     {
-        driver.UpdateWorkStatus(OnOrder);
+        driver.workStatus = OnOrder;
     }
     return 0;
 }
@@ -143,7 +143,8 @@ int TaxiCorporation::ReturnCar(unsigned int CarID)
     return 0;
 }
 
-unsigned int TaxiCorporation::PostOrder(unsigned int CustomerID, string StartAdress, string FinalAdress, float distance, CarClass CarClass)
+unsigned int TaxiCorporation::PostOrder(unsigned int CustomerID, const string &StartAdress,
+                                        const string &FinalAdress, float distance, const CarClass &CarClass)
 {
     Customer &customer = GetCustomerByID(CustomerID);
     float Price = CalculatePrice(CarClass, distance);
@@ -175,21 +176,28 @@ int TaxiCorporation::CalculatePrice(CarClass CarClass, float Distance)
     return Distance * GetPrice[CarClass];
 }
 
-unsigned int TaxiCorporation::AddNewDriver(string FirstName, string LastName, string PhoneNum, int DrivingExperience)
+unsigned int TaxiCorporation::AddNewDriver(const string &FirstName,
+                                           const string &LastName,
+                                           const string &PhoneNum,
+                                           int DrivingExperience)
 {
     unsigned int id = Drivers.empty() ? 1 : (Drivers.back().GetID() + 1);
     Drivers.push_back(Driver(this, id, FirstName, LastName, PhoneNum, 0, DrivingExperience));
     return id;
 }
 
-unsigned int TaxiCorporation::AddNewCustomer(string FirstName, string LastName, string PhoneNum, float Discount)
+unsigned int TaxiCorporation::AddNewCustomer(const string &FirstName,
+                                             const string &LastName,
+                                             const string &PhoneNum, float Discount)
 {
     unsigned int id = Customers.empty() ? 1 : (Customers.back().GetID() + 1);
     Customers.push_back(Customer(id, this, FirstName, LastName, PhoneNum, 0, Discount));
     return id;
 }
 
-unsigned int TaxiCorporation::AddNewCar(string CarNumber, string Color, unsigned int serialNuber, CarClass CarClass)
+unsigned int TaxiCorporation::AddNewCar(const string &CarNumber,
+                                        const string &Color, unsigned int serialNuber,
+                                        const CarClass &CarClass)
 {
     unsigned int id = Cars.empty() ? 1 : (Cars.back().GetID() + 1);
     Cars.push_back(Car(id, CarNumber, Color, serialNuber, CarClass));
@@ -248,7 +256,7 @@ int TaxiCorporation::RemoveDriver(unsigned int DriverID)
 {
     if (!DriverInList(DriverID))
         return 1;
-    if (GetDriverByID(DriverID).GetWorkStatus() != OnBreak)
+    if (GetDriverByID(DriverID).workStatus != OnBreak)
     {
         return -1;
     }

@@ -1,7 +1,7 @@
 #pragma once
 #include "TaxiCorporation.h"
 
-Person::Person(string FirstName, string LastName, string PhoneNumber, int Balance)
+Person::Person(const string &FirstName, const string &LastName, const string &PhoneNumber, int Balance)
     : FirstName(FirstName), LastName(LastName), PhoneNumber(PhoneNumber),
       taxiCoorporation(nullptr), ActiveOrderID(0), Balance(Balance), ID(0)
 {

@@ -2,13 +2,15 @@
 #include "TaxiCorporation.h"
 
 // Constructor without ID parameter
-Customer::Customer(string FirstName, string LastName, string PhoneNumber, int Balance, float Discount)
+Customer::Customer(const string &FirstName, const string &LastName, const string &PhoneNumber,
+                   int Balance, float Discount)
     : Person(FirstName, LastName, PhoneNumber, Balance), Discount(Discount)
 {
 }
 
 // Constructor with ID parameter
-Customer::Customer(int ID, TaxiCorporation *tc, string FirstName, string LastName, string PhoneNumber, int Balance, float Discount)
+Customer::Customer(int ID, TaxiCorporation *tc, const string &FirstName, const string &LastName,
+                   const string &PhoneNumber, int Balance, float Discount)
     : Person(FirstName, LastName, PhoneNumber, Balance), Discount(Discount)
 {
     this->ID = ID;
@@ -21,7 +23,8 @@ Customer::~Customer()
 }
 
 // Order a taxi
-int Customer::OrderTaxi(string startAdress, string FinalAdress, float distance, CarClass carClass)
+int Customer::OrderTaxi(const string &startAdress, const string &FinalAdress,
+                        float distance, const CarClass &carClass)
 {
     if (ActiveOrderID != 0)
     {
@@ -43,7 +46,7 @@ bool Customer::CheckBalance(int sum) const
 int Customer::CancelOrder()
 {
     Order &order = taxiCoorporation->GetOrderByID(ActiveOrderID);
-    if (order.GetDriverID() != 0)
+    if (order.DriverID != 0)
     {
         return -1;
     }
@@ -53,9 +56,13 @@ int Customer::CancelOrder()
 }
 
 // Update the discount
-void Customer::UpdateDiscount(float discount)
+int Customer::UpdateDiscount(float discount)
 {
+
+    if (discount < 0 || discount > 1)
+        return -1;
     Discount = discount;
+    return 0;
 }
 
 // Get the discount

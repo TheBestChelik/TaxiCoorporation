@@ -15,14 +15,14 @@ private:
     bool Occupied;
 
 public:
-    Car(unsigned int ID, string CarNumber = "",
-        string Color = "",
+    Car(unsigned int ID, const string &CarNumber = "",
+        const string &Color = "",
         unsigned int SerialNumber = 0,
-        CarClass carClass = CarClass::Standart);
-    Car(string CarNumber = "",
-        string Color = "",
+        const CarClass &carClass = CarClass::Standart);
+    Car(const string &CarNumber = "",
+        const string &Color = "",
         unsigned int SerialNumber = 0,
-        CarClass carClass = CarClass::Standart);
+        const CarClass &carClass = CarClass::Standart);
     ~Car();
 
     void DriveOrder();

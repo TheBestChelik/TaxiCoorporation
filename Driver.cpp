@@ -2,14 +2,14 @@
 #include "TaxiCorporation.h"
 
 // Constructor without ID parameter
-Driver::Driver(string FirstName, string LastName, string PhoneNumber, int Balance, int DrivingExperience)
+Driver::Driver(const string &FirstName, const string &LastName, const string &PhoneNumber, int Balance, int DrivingExperience)
     : Person(FirstName, LastName, PhoneNumber, Balance), CurrentCarId(0), DrivingExperience(DrivingExperience)
 {
     workStatus = WorkStatus::OnBreak;
 }
 
 // Constructor with ID parameter
-Driver::Driver(TaxiCorporation *tc, unsigned int id, string FirstName, string LastName, string PhoneNumber, int Balance, int DrivingExperience)
+Driver::Driver(TaxiCorporation *tc, unsigned int id, const string &FirstName, const string &LastName, const string &PhoneNumber, int Balance, int DrivingExperience)
     : Person(FirstName, LastName, PhoneNumber, Balance), CurrentCarId(0), DrivingExperience(DrivingExperience)
 {
     this->ID = id;
@@ -52,18 +52,6 @@ void Driver::CompeteOrder()
 {
     taxiCoorporation->GetCarByID(CurrentCarId).DriveOrder();
     taxiCoorporation->FinishOrder(ActiveOrderID);
-}
-
-// Get the work status
-WorkStatus Driver::GetWorkStatus() const
-{
-    return workStatus;
-}
-
-// Update the work status
-void Driver::UpdateWorkStatus(WorkStatus ws)
-{
-    workStatus = ws;
 }
 
 // Get the current car ID

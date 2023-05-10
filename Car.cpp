@@ -1,15 +1,15 @@
 #pragma once
 #include "TaxiCorporation.h"
 
-Car::Car(unsigned int ID, string CarNumber, string Color,
-         unsigned int SerialNumber, CarClass carClass)
+Car::Car(unsigned int ID, const string &CarNumber, const string &Color,
+         unsigned int SerialNumber, const CarClass &carClass)
     : ID(ID), CarNumber(CarNumber), Color(Color),
       SerialNumber(SerialNumber), carClass(carClass), Occupied(false)
 {
 }
 
-Car::Car(string CarNumber, string Color, unsigned int SerialNumber,
-         CarClass carClass)
+Car::Car(const string &CarNumber, const string &Color, unsigned int SerialNumber,
+         const CarClass &carClass)
     : Car(0, CarNumber, Color, SerialNumber, carClass)
 {
 }

@@ -10,21 +10,21 @@ private:
     float Discount;
 
 public:
-    Customer(string FirstName = "", string LastName = "",
-             string PhoneNumber = "", int Balance = 0,
+    Customer(const string &FirstName = "", const string &LastName = "",
+             const string &PhoneNumber = "", int Balance = 0,
              float Discount = 0);
     Customer(int ID, TaxiCorporation *tc,
-             string FirstName = "", string LastName = "",
-             string PhoneNumber = "", int Balance = 0,
+             const string &FirstName = "", const string &LastName = "",
+             const string &PhoneNumber = "", int Balance = 0,
              float Discount = 0);
     ~Customer();
 
-    int OrderTaxi(string startAdress, string FinalAdress,
-                  float distance, CarClass carClass);
+    int OrderTaxi(const string &startAdress, const string &FinalAdress,
+                  float distance, const CarClass &carClass);
     bool CheckBalance(int sum) const;
     int CancelOrder();
 
-    void UpdateDiscount(float discount);
+    int UpdateDiscount(float discount);
     float GetDiscount() const;
     int UseDiscount(float price);
 

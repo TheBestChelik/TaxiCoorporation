@@ -2,13 +2,16 @@
 #include "TaxiCorporation.h"
 // Default constructor
 Order::Order(TaxiCorporation *tc, unsigned int Id, unsigned int CustomerID,
-             string StartingAdress, string FinalAdress, float Distance,
-             CarClass CarClass, float Price) : taxiCorporation(tc), ID(Id), carClass(CarClass),
-                                               CustomerID(CustomerID), Price(Price)
+             const string &StartingAdress, const string &FinalAdress, float Distance,
+             const CarClass &CarClass, float Price) : taxiCorporation(tc), ID(Id), carClass(CarClass),
+                                                      CustomerID(CustomerID), Price(Price)
 {
     this->route.StartAdress = StartingAdress;
     this->route.FinishAdress = FinalAdress;
     this->route.Distance = Distance;
+    CarID = 0;
+    DriverID = 0;
+    OrderDone = false;
 }
 // Destructor
 Order::~Order()
@@ -25,7 +28,7 @@ int Order::FinishOrder()
     Customer.UpdateDiscount(0.05);
     Driver.TopUpBalance(GetPriceForDriver());
     Driver.SetOrder(0);
-    Driver.UpdateWorkStatus(WaitingForOrder);
+    Driver.workStatus = WaitingForOrder;
     Customer.SetOrder(0);
 }
 
@@ -47,35 +50,12 @@ unsigned int Order::GetCusomerID() const
     return CustomerID;
 }
 
-// Get the driver ID
-unsigned int Order::GetDriverID() const
-{
-    return DriverID;
-}
-
 // Get the order ID
 unsigned int Order::GetID() const
 {
     return ID;
 }
 
-// Get the car ID
-unsigned int Order::GetCarID() const
-{
-    return CarID;
-}
-CarClass Order::GetCarClass() const
-{
-    return this->carClass;
-}
-void Order::SetDriverID(unsigned int DriverID)
-{
-    this->DriverID = DriverID;
-}
-void Order::SetCarID(unsigned int CarID)
-{
-    this->CarID = CarID;
-}
 // Get the price for the customer
 float Order::GetPriceForCustomer() const
 {
@@ -93,17 +73,6 @@ time_t Order::GetOrderTime() const
 {
     return OrderDataTime;
 }
-
-// Get the payment for the order
-int Order::GetPayment()
-{
-}
-
-// Pay the driver for the order
-int Order::PayDriver()
-{
-}
-
 // Output stream operator for Route
 ostream &operator<<(ostream &os, const Route &r)
 {

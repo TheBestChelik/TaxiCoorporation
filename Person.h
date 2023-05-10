@@ -12,8 +12,9 @@ protected:
     unsigned int ID;
 
 public:
-    Person(string FirstName = "",
-           string LastName = "", string PhoneNumber = "",
+    Person(const string &FirstName = "",
+           const string &LastName = "",
+           const string &PhoneNumber = "",
            int Balance = 0);
     ~Person();
 

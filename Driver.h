@@ -5,17 +5,18 @@ class Driver : public Person
 private:
        unsigned int CurrentCarId;
        int DrivingExperience;
-       WorkStatus workStatus;
 
 public:
-       Driver(string FirstName = "Driver",
-              string LastName = "",
-              string PhoneNumber = "", int Balance = 0,
+       WorkStatus workStatus;
+
+       Driver(const string &FirstName = "Driver",
+              const string &LastName = "",
+              const string &PhoneNumber = "", int Balance = 0,
               int DrivingExperience = 0);
        Driver(TaxiCorporation *tc, unsigned int id,
-              string FirstName = "Driver",
-              string LastName = "",
-              string PhoneNumber = "", int Balance = 0,
+              const string &FirstName = "Driver",
+              const string &LastName = "",
+              const string &PhoneNumber = "", int Balance = 0,
               int DrivingExperience = 0);
        ~Driver();
 

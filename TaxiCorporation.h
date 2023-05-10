@@ -29,7 +29,7 @@ private:
     int FindDriverForOrder(int OrderID);
 
 public:
-    TaxiCorporation(string CorporationName = "");
+    TaxiCorporation(const string &CorporationName = "");
     ~TaxiCorporation();
 
     int FinishOrder(unsigned int orderID);
@@ -37,26 +37,26 @@ public:
                  unsigned int DriverID);
     int ReturnCar(unsigned int CarID);
     unsigned int PostOrder(unsigned int CustomerID,
-                           string StartAdress,
-                           string FinalAdress,
+                           const string &StartAdress,
+                           const string &FinalAdress,
                            float distance,
-                           CarClass CarClass);
+                           const CarClass &CarClass);
     int RemoveOrder(unsigned int OrderID);
     int CalculatePrice(CarClass CarClass,
                        float Distance);
 
-    unsigned int AddNewDriver(string FirstName,
-                              string LastName,
-                              string PhoneNum,
+    unsigned int AddNewDriver(const string &FirstName,
+                              const string &LastName,
+                              const string &PhoneNum,
                               int DrivingExperience);
-    unsigned int AddNewCustomer(string FirstName,
-                                string LastName,
-                                string PhoneNum,
+    unsigned int AddNewCustomer(const string &FirstName,
+                                const string &LastName,
+                                const string &PhoneNum,
                                 float Discount);
-    unsigned int AddNewCar(string CarNumber,
-                           string Color,
+    unsigned int AddNewCar(const string &CarNumber,
+                           const string &Color,
                            unsigned int serialNuber,
-                           CarClass CarClass);
+                           const CarClass &CarClass);
 
     bool CarInList(unsigned int ID) const;
     bool DriverInList(unsigned int ID) const;

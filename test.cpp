@@ -2,20 +2,6 @@
 #include <cstring>
 #include <cassert>
 
-template <typename ExceptionType, typename FunctionType, typename... Args>
-void assert_throws(FunctionType &&func, Args &&...args)
-{
-    bool thrown = false;
-    try
-    {
-        func(std::forward<Args>(args)...);
-    }
-    catch (const ExceptionType &e)
-    {
-        thrown = true;
-    }
-    assert(thrown);
-}
 void testCar()
 {
     // Test default constructor
@@ -98,7 +84,7 @@ void testDriver()
     assert(driver1.GetBalance() == 0);
     assert(driver1.GetDrivingExperience() == 0);
     assert(driver1.GetCurrentCarID() == 0);
-    assert(driver1.GetWorkStatus() == OnBreak);
+    assert(driver1.workStatus == OnBreak);
     // Test parameterized constructor
     TaxiCorporation taxiCorp;
     Driver driver2(&taxiCorp, 1, "John", "Doe", "123-456-7890", 100, 5);
@@ -109,7 +95,7 @@ void testDriver()
     assert(driver2.GetBalance() == 100);
     assert(driver2.GetDrivingExperience() == 5);
     assert(driver2.GetCurrentCarID() == 0);
-    assert(driver2.GetWorkStatus() == OnBreak);
+    assert(driver2.workStatus == OnBreak);
 }
 void TestOrder()
 {
@@ -119,19 +105,19 @@ void TestOrder()
     Order order1(&taxiCorp, 1, 2, "123 Main St", "456 Elm St", 5.0, CarClass::Standart, 125);
     assert(order1.GetID() == 1);
     assert(order1.GetCusomerID() == 2);
-    assert(order1.GetDriverID() == 0);
-    assert(order1.GetCarID() == 0);
+    assert(order1.DriverID == 0);
+    assert(order1.CarID == 0);
     assert(order1.GetOrderDoneState() == false);
     assert(order1.GetRoute().StartAdress == "123 Main St");
     assert(order1.GetRoute().FinishAdress == "456 Elm St");
     assert(order1.GetRoute().Distance == 5.0);
-    assert(order1.GetCarClass() == CarClass::Standart);
+    assert(order1.carClass == CarClass::Standart);
 
     // Test setters and getters
-    order1.SetDriverID(3);
-    order1.SetCarID(4);
-    assert(order1.GetDriverID() == 3);
-    assert(order1.GetCarID() == 4);
+    order1.DriverID = 3;
+    order1.CarID = 4;
+    assert(order1.DriverID == 3);
+    assert(order1.CarID == 4);
 }
 void testAddingRemoving()
 {
@@ -249,7 +235,7 @@ void testMainAlgorithm()
     taxiCorp.GetDriverByID(Driver).CompeteOrder();
 
     assert(taxiCorp.GetOrderByID(Order).GetOrderDoneState() == true);
-    assert(taxiCorp.GetDriverByID(Driver).GetWorkStatus() == WorkStatus::WaitingForOrder);
+    assert(taxiCorp.GetDriverByID(Driver).workStatus == WorkStatus::WaitingForOrder);
     assert(taxiCorp.GetDriverByID(Driver).GetBalance() == 112);
     assert(taxiCorp.GetCustomerByID(Customer).GetBalance() == 273);
     assert(taxiCorp.GetCustomerByID(Customer).GetActiveOrderID() == 0);
@@ -261,7 +247,7 @@ void testMainAlgorithm()
 
     taxiCorp.GetDriverByID(Driver2).StartWork(Car2);
 
-    assert(taxiCorp.GetOrderByID(2).GetDriverID() == Driver2);
+    assert(taxiCorp.GetOrderByID(2).DriverID == Driver2);
 
     taxiCorp.GetDriverByID(Driver2).CompeteOrder();
 
